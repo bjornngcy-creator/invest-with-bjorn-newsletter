@@ -228,72 +228,11 @@
         straight to your inbox.
       </p>
 
-      <form id="signup-form" onsubmit="handleSubmit(event)" novalidate>
-        <input type="text" id="name" name="name" placeholder="Your name" required autocomplete="name" />
-        <input type="email" id="email" name="email" placeholder="Your email address" required autocomplete="email" />
-        <p class="field-error" id="email-error">Please enter a valid email address (e.g. name@example.com)</p>
-        <button type="submit" id="submit-btn">Subscribe for Free →</button>
-        <p class="field-error" id="error-msg">Something went wrong. Please try again.</p>
-      </form>
-
-      <p class="note">No spam. Unsubscribe anytime.</p>
+      <iframe src="https://investwithbjorn.substack.com/embed" width="100%" height="150" style="border: none; background: transparent;" frameborder="0" scrolling="no"></iframe>
     </div>
 
-    <div class="success-msg" id="success-section">
-      <div class="checkmark">✓</div>
-      <h2>You're on the list!</h2>
-      <p>Thanks for subscribing. Talk soon.</p>
-    </div>
 
   </div>
 
-  <script>
-    // ⬇️  Paste your Google Apps Script Web App URL here after setup
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxZpJZaJfKccHfYxM5Y6epec-24iATuFneTchGm-y-BPtbi0IlhEUms8hwsBFc-oBNhw/exec";
-
-    function isValidEmail(email) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
-
-    async function handleSubmit(e) {
-      e.preventDefault();
-
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const btn = document.getElementById("submit-btn");
-      const errorMsg = document.getElementById("error-msg");
-      const emailError = document.getElementById("email-error");
-
-      emailError.style.display = "none";
-      errorMsg.style.display = "none";
-
-      if (!isValidEmail(email)) {
-        emailError.style.display = "block";
-        return;
-      }
-
-      btn.disabled = true;
-      btn.textContent = "Subscribing...";
-
-
-      try {
-        await fetch(APPS_SCRIPT_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, timestamp: new Date().toISOString() }),
-        });
-
-        // no-cors means we can't read the response, but if fetch doesn't throw, assume success
-        document.getElementById("form-section").style.display = "none";
-        document.getElementById("success-section").style.display = "flex";
-
-      } catch (err) {
-        btn.disabled = false;
-        btn.textContent = "Subscribe for Free →";
-        document.getElementById("error-msg").style.display = "block";
-      }
-    }
-  </script>
 </body>
 </html>
