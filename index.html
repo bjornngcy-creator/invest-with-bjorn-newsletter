@@ -207,11 +207,11 @@
       color: #9aa0b0;
     }
 
-    .error-msg {
+    .field-error {
       font-family: 'Arial', sans-serif;
       font-size: 13px;
       color: #e57373;
-      margin-top: 8px;
+      text-align: left;
       display: none;
     }
   </style>
@@ -228,11 +228,12 @@
         straight to your inbox.
       </p>
 
-      <form id="signup-form" onsubmit="handleSubmit(event)">
+      <form id="signup-form" onsubmit="handleSubmit(event)" novalidate>
         <input type="text" id="name" name="name" placeholder="Your name" required autocomplete="name" />
         <input type="email" id="email" name="email" placeholder="Your email address" required autocomplete="email" />
+        <p class="field-error" id="email-error">Please enter a valid email address (e.g. name@example.com)</p>
         <button type="submit" id="submit-btn">Subscribe for Free →</button>
-        <p class="error-msg" id="error-msg">Something went wrong. Please try again.</p>
+        <p class="field-error" id="error-msg">Something went wrong. Please try again.</p>
       </form>
 
       <p class="note">No spam. Unsubscribe anytime.</p>
@@ -250,6 +251,10 @@
     // ⬇️  Paste your Google Apps Script Web App URL here after setup
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxZpJZaJfKccHfYxM5Y6epec-24iATuFneTchGm-y-BPtbi0IlhEUms8hwsBFc-oBNhw/exec";
 
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
     async function handleSubmit(e) {
       e.preventDefault();
 
@@ -257,10 +262,19 @@
       const email = document.getElementById("email").value.trim();
       const btn = document.getElementById("submit-btn");
       const errorMsg = document.getElementById("error-msg");
+      const emailError = document.getElementById("email-error");
+
+      emailError.style.display = "none";
+      errorMsg.style.display = "none";
+
+      if (!isValidEmail(email)) {
+        emailError.style.display = "block";
+        return;
+      }
 
       btn.disabled = true;
       btn.textContent = "Subscribing...";
-      errorMsg.style.display = "none";
+
 
       try {
         await fetch(APPS_SCRIPT_URL, {
@@ -277,7 +291,7 @@
       } catch (err) {
         btn.disabled = false;
         btn.textContent = "Subscribe for Free →";
-        errorMsg.style.display = "block";
+        document.getElementById("error-msg").style.display = "block";
       }
     }
   </script>
